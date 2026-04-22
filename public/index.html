@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pre-Assessment Review</title>
+    <style>
+      html,
+      body,
+      #root {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        margin: 0;
+        padding: 0;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: Arial, sans-serif;
+        color: #5f6369;
+        font-size: clamp(0.875rem, 1.5vw, 0.95rem);
+        background: #f5f8fb;
+      }
+
+      .app-shell {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+
+      .header-bar {
+        height: 6%;
+        min-height: 38px;
+        max-height: 54px;
+        background: #00843d;
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 clamp(0.5rem, 1.8vw, 1rem);
+        gap: 0.5rem;
+      }
+
+      .header-title {
+        font-size: clamp(0.8rem, 1.7vw, 1rem);
+        font-weight: 700;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .header-subtitle {
+        font-size: clamp(0.72rem, 1.4vw, 0.9rem);
+        font-weight: 600;
+        white-space: nowrap;
+      }
+
+      .topic-bar {
+        flex: 0 0 auto;
+        height: 16%;
+        min-height: 64px;
+        max-height: 110px;
+        background: #ffffff;
+        border-bottom: 1px solid #dbe3eb;
+        padding: clamp(0.35rem, 1vw, 0.55rem) clamp(0.5rem, 1.8vw, 1rem);
+        overflow: hidden;
+      }
+
+      .topic-grid {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        gap: clamp(0.25rem, 0.8vw, 0.5rem);
+        align-content: center;
+      }
+
+      .topic-btn {
+        border: 1px solid #0033a0;
+        background: #ffffff;
+        color: #0033a0;
+        border-radius: 999px;
+        padding: clamp(0.2rem, 0.8vw, 0.38rem) clamp(0.45rem, 1.3vw, 0.75rem);
+        font-size: clamp(0.67rem, 1.25vw, 0.82rem);
+        line-height: 1.2;
+        cursor: pointer;
+        transition: background-color 120ms ease, color 120ms ease,
+          border-color 120ms ease;
+      }
+
+      .topic-btn.active {
+        background: #0033a0;
+        color: #ffffff;
+      }
+
+      .topic-btn:focus-visible,
+      .send-btn:focus-visible,
+      .chat-input:focus-visible {
+        outline: 2px solid #00a3e0;
+        outline-offset: 1px;
+      }
+
+      .chat-thread {
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding: clamp(0.5rem, 1.8vw, 0.95rem);
+        display: flex;
+        flex-direction: column;
+        gap: clamp(0.45rem, 1.2vw, 0.75rem);
+      }
+
+      .message-row {
+        display: flex;
+      }
+
+      .message-row.user {
+        justify-content: flex-end;
+      }
+
+      .message-row.assistant {
+        justify-content: flex-start;
+      }
+
+      .bubble {
+        max-width: 82%;
+        padding: clamp(0.45rem, 1.2vw, 0.75rem);
+        border-radius: 14px;
+        font-size: clamp(0.75rem, 1.45vw, 0.92rem);
+        line-height: 1.35;
+        word-break: break-word;
+        white-space: pre-wrap;
+      }
+
+      .bubble.user {
+        background: #e5f7ed;
+        border: 1px solid #b7e8cc;
+        color: #244f37;
+      }
+
+      .bubble.assistant {
+        background: #ffffff;
+        border: 1px solid #d8e1ea;
+        color: #39424d;
+      }
+
+      .input-bar {
+        height: 6%;
+        min-height: 38px;
+        max-height: 54px;
+        border-top: 1px solid #dbe3eb;
+        background: #ffffff;
+        padding: clamp(0.25rem, 0.8vw, 0.4rem) clamp(0.45rem, 1.4vw, 0.8rem);
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: clamp(0.35rem, 0.9vw, 0.55rem);
+        align-items: center;
+      }
+
+      .chat-input {
+        width: 100%;
+        height: 100%;
+        min-height: 30px;
+        border: 1px solid #b7c4d0;
+        border-radius: 999px;
+        padding: 0 clamp(0.65rem, 1.5vw, 0.9rem);
+        color: #2f3640;
+        background: #ffffff;
+        font-family: Arial, sans-serif;
+        font-size: clamp(0.74rem, 1.35vw, 0.9rem);
+      }
+
+      .send-btn {
+        height: 100%;
+        min-height: 30px;
+        border: none;
+        border-radius: 999px;
+        padding: 0 clamp(0.7rem, 1.6vw, 1rem);
+        background: #00843d;
+        color: #ffffff;
+        font-family: Arial, sans-serif;
+        font-size: clamp(0.72rem, 1.3vw, 0.88rem);
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      .send-btn:active {
+        transform: translateY(1px);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root">
+      <div class="app-shell">
+        <header class="header-bar">
+          <div class="header-title">Information Security Essentials</div>
+          <div class="header-subtitle">Pre-Assessment Review</div>
+        </header>
+
+        <section class="topic-bar" aria-label="Review topics">
+          <div class="topic-grid" id="topicGrid"></div>
+        </section>
+
+        <main class="chat-thread" id="chatThread" aria-live="polite"></main>
+
+        <form class="input-bar" id="chatForm">
+          <input
+            id="chatInput"
+            class="chat-input"
+            type="text"
+            placeholder="Ask a question or choose a topic..."
+            autocomplete="off"
+            aria-label="Type your question"
+          />
+          <button type="submit" class="send-btn">Send</button>
+        </form>
+      </div>
+    </div>
+
+    <script>
+      const topics = [
+        "Social Engineering",
+        "Data Security",
+        "Access Control & Authentication",
+        "Password Protection",
+        "Mobile Security",
+        "Social Media Security",
+        "Secure Internet Browsing",
+        "Cloud Security"
+      ];
+
+      const openingMessage =
+        "Welcome to your pre-assessment review. Select a topic above to get started, or ask me anything about Information Security. I'll let you know when I think you're ready for the assessment.";
+
+      const history = [];
+      const activeTopics = new Set();
+
+      const topicGrid = document.getElementById("topicGrid");
+      const chatThread = document.getElementById("chatThread");
+      const chatForm = document.getElementById("chatForm");
+      const chatInput = document.getElementById("chatInput");
+
+      function renderTopics() {
+        topicGrid.innerHTML = "";
+
+        topics.forEach((topic) => {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "topic-btn";
+          btn.textContent = topic;
+          btn.setAttribute("aria-pressed", "false");
+
+          btn.addEventListener("click", () => {
+            const isActive = activeTopics.has(topic);
+            if (isActive) {
+              activeTopics.delete(topic);
+              btn.classList.remove("active");
+              btn.setAttribute("aria-pressed", "false");
+            } else {
+              activeTopics.add(topic);
+              btn.classList.add("active");
+              btn.setAttribute("aria-pressed", "true");
+            }
+
+            const topicPrompt = `I want to review ${topic} before the assessment.`;
+            sendUserMessage(topicPrompt);
+          });
+
+          topicGrid.appendChild(btn);
+        });
+      }
+
+      function appendMessage(role, content) {
+        const row = document.createElement("div");
+        row.className = `message-row ${role}`;
+
+        const bubble = document.createElement("div");
+        bubble.className = `bubble ${role}`;
+        bubble.textContent = content;
+
+        row.appendChild(bubble);
+        chatThread.appendChild(row);
+        chatThread.scrollTop = chatThread.scrollHeight;
+      }
+
+      async function sendHistoryToApi() {
+        try {
+          const response = await fetch("/api/chat", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ history })
+          });
+
+          if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+          }
+
+          const data = await response.json();
+          const reply = typeof data.reply === "string" ? data.reply.trim() : "";
+
+          if (!reply) {
+            throw new Error("Empty reply");
+          }
+
+          history.push({ role: "assistant", content: reply });
+          appendMessage("assistant", reply);
+        } catch (error) {
+          const fallback =
+            "I am having trouble connecting right now. Please try again in a moment.";
+          history.push({ role: "assistant", content: fallback });
+          appendMessage("assistant", fallback);
+        }
+      }
+
+      function sendUserMessage(content) {
+        const message = content.trim();
+        if (!message) {
+          return;
+        }
+
+        history.push({ role: "user", content: message });
+        appendMessage("user", message);
+        sendHistoryToApi();
+      }
+
+      chatForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const typed = chatInput.value;
+        chatInput.value = "";
+        sendUserMessage(typed);
+        chatInput.focus();
+      });
+
+      history.push({ role: "assistant", content: openingMessage });
+      appendMessage("assistant", openingMessage);
+      renderTopics();
+      chatInput.focus();
+    </script>
+  </body>
+</html>
